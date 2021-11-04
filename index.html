@@ -111,7 +111,7 @@ var myRenderer = L.canvas({ padding: 0.5 });
     // For each row, columns `Latitude`, `Longitude`, and `Title` are required
     for (var i in data) {
       var row = data[i];
-      var family = (row.Family === '2015') ? "#3333ff" : (row.Family === '2016') ? "#3333ff" : (row.Family === '2017') ? "#3333ff" : (row.Family === '2018') ? "#3333ff" : (row.Family === '2019') ? "#3333ff" : (row.Family === '100APPLE') ? "#00ff00" : (row.Family === '101APPLE') ? "#00ff00" : (row.Family === '102APPLE') ? "#00ff00" : (row.Family === '103APPLE') ? "#00ff00" : (row.Family === '104APPLE') ? "#00ff00" : (row.Family === '105APPLE') ? "#00ff00" : (row.Family === '106APPLE') ? "#00ff00" : (row.Family === '107APPLE') ? "#00ff00" : (row.Family === '108APPLE') ? "#00ff00" : (row.Family === 'Former CCC Inventory Photos') ? "#ffff33" : (row.Family === 'Ipad resized') ? "#ffad33" : (row.Family === 'Request_Photos') ? "#cc0099" : (row.Family === 'Robs Iphone (to Add to list)') ? "#bfbfbf" : (row.Family === 'Tree Contractor Photos') ? "#ecc6d9" : (row.Family === 'tree_inspections_scheduled_work') ? "#ff471a" : (row.Family === 'Various tree monitoring photos') ? "#99ffff";
+      var family = (row.Family === '2015') ? "#3333ff" : (row.Family === '2016') ? "#3333ff" : (row.Family === '2017') ? "#3333ff" : (row.Family === '2018') ? "#3333ff" : (row.Family === '2019') ? "#3333ff" : (row.Family === '100APPLE') ? "#00ff00" : (row.Family === '101APPLE') ? "#00ff00" : (row.Family === '102APPLE') ? "#00ff00" : (row.Family === '103APPLE') ? "#00ff00" : (row.Family === '104APPLE') ? "#00ff00" : (row.Family === '105APPLE') ? "#00ff00" : (row.Family === '106APPLE') ? "#00ff00" : (row.Family === '107APPLE') ? "#00ff00" : (row.Family === '108APPLE') ? "#00ff00" : (row.Family === 'Former CCC Inventory Photos') ? "#ffff33" : (row.Family === 'Ipad resized') ? "#ffad33" : (row.Family === 'Request_Photos') ? "#cc0099" : (row.Family === 'Robs Iphone (to Add to list)') ? "#bfbfbf" : (row.Family === 'Tree Contractor Photos') ? "#ecc6d9" : (row.Family === 'tree_inspections_scheduled_work') ? "#ff471a" : (row.Family === 'Various tree monitoring photos') ? "#99ffff" : "green";
 	    
 	    
       var marker = L.circleMarker([row.Latitude, row.Longitude], {
@@ -120,7 +120,7 @@ var myRenderer = L.canvas({ padding: 0.5 });
         weight: 0.25,
         color: '#000000',
         fillOpacity: 1,
-       	fillColor: '#000000',
+       	fillColor: family',
       }).bindPopup("<dl><dt><strong>Address</strong></dt>"
            + "<dd>" + row.Address + "</dd>"
            + "<dt><strong>Botanic Name</strong></dt>"
