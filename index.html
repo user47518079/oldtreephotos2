@@ -128,7 +128,7 @@ var myRenderer = L.canvas({ padding: 0.5 });
 	   + "<dt><strong>Date Taken</strong></dt>"
            + "<dd>" + row.Common + "</dd>"
            + "<dt><strong>Link</strong></dt>"
-           + "<dd><a href=" + row.TreeID + "target='_blank'>Photo</a></dd>");
+           + "<dd><a href=" + row.TreeID + "target='_blank' rel='noopener noreferrer'>Photo</a></dd>");
       
       marker.addTo(map);
     }
