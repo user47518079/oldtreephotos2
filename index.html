@@ -116,7 +116,7 @@ var myRenderer = L.canvas({ padding: 0.5 });
 	    
 	    
 	    	    /* Control panel to display map layers */
-  var controlmarkers = L.control.circleMarker( null, null, {
+  var controlmarkers = L.control.layers( null, layers, {
     position: "topleft",
     collapsed: false
   }).addTo(map);
