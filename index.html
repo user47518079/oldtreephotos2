@@ -102,7 +102,7 @@ var myRenderer = L.canvas({ padding: 0.5 });
   // see more basemap options at https://leaflet-extras.github.io/leaflet-providers/preview/
 	  
 	    /* Control panel to display map layers */
-  var controlLayers = L.control.layers( null, null, {
+  var controlLayers = L.control.marker( null, null, {
     position: "topleft",
     collapsed: false
   }).addTo(map);
