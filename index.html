@@ -101,11 +101,6 @@ var myRenderer = L.canvas({ padding: 0.5 });
 
   // see more basemap options at https://leaflet-extras.github.io/leaflet-providers/preview/
 	  
-	    /* Control panel to display map layers */
-  var controlLayers = L.control.marker( null, null, {
-    position: "topleft",
-    collapsed: false
-  }).addTo(map);
       
   // Read markers data from data.csv
   $.get('./data.csv', function(csvString){
@@ -119,6 +114,12 @@ var myRenderer = L.canvas({ padding: 0.5 });
       var row = data[i];
       var family = (row.Family === '2015') ? "#3333ff" : (row.Family === '2016') ? "#3333ff" : (row.Family === '2017') ? "#3333ff" : (row.Family === '2018') ? "#3333ff" : (row.Family === '2019') ? "#3333ff" : (row.Family === '100APPLE') ? "#00ff00" : (row.Family === '101APPLE') ? "#00ff00" : (row.Family === '102APPLE') ? "#00ff00" : (row.Family === '103APPLE') ? "#00ff00" : (row.Family === '104APPLE') ? "#00ff00" : (row.Family === '105APPLE') ? "#00ff00" : (row.Family === '106APPLE') ? "#00ff00" : (row.Family === '107APPLE') ? "#00ff00" : (row.Family === '108APPLE') ? "#00ff00" : (row.Family === 'Former CCC Inventory Photos') ? "#ffff33" : (row.Family === 'Ipad resized') ? "#ffad33" : (row.Family === 'Request_Photos') ? "#cc0099" : (row.Family === 'Robs Iphone (to Add to list)') ? "#bfbfbf" : (row.Family === 'Tree Contractor Photos') ? "#ecc6d9" : (row.Family === 'tree_inspections_scheduled_work') ? "#ff471a" : (row.Family === 'Various tree monitoring photos') ? "#99ffff" : "green";
 	    
+	    
+	    	    /* Control panel to display map layers */
+  var controlLayers = L.control.marker( null, null, {
+    position: "topleft",
+    collapsed: false
+  }).addTo(map);
 	    
       var marker = L.circleMarker([row.Latitude, row.Longitude], {
         renderer: myRenderer,
