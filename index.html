@@ -144,7 +144,10 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
 	   + "<dt><strong>Date Taken</strong></dt>"
            + "<dd>" + row.Common + "</dd>"
            + "<dt><strong>Link</strong></dt>"
-           + "<dd><a href=" + row.TreeID + "target='_blank' rel='noopener noreferrer'>Photo</a></dd>");
+           + "<dd><a href=" + row.TreeID + "target='_blank' rel='noopener noreferrer'>Photo</a></dd>"
+     	   + "<dt>___</dt>"
+           + "<dd><a href=" + row.Report + "target='_blank' rel='noopener noreferrer'>Report</a></dd>")
+      ;
 	   
       
       marker.addTo(map);
