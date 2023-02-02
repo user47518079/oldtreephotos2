@@ -34,7 +34,13 @@
   <script>
 
   // Set up initial map center and zoom level
-  var map = L.map("map");
+  var map = L.map("map"){
+      attributionControl: false,
+      zoomControl: true,
+      scrollWheelZoom: true,
+      tap: true
+    };
+	  	  
 
     map.setView([-33.9296, 151.0537], 13);
 
