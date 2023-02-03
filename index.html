@@ -112,7 +112,7 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
         opacity: 2,
         fillOpacity: 0
       }).addTo(map);
-  })controlLayers.addLayer(ward, 'Wards');
+  });
 
       
 
@@ -158,10 +158,11 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
 
   });
 	    
-	  
+var cities = L.layerGroup(["2015", "2016", "2017", "2018", "2019", "100APPLE", "101APPLE", "102APPLE", "103APPLE", "104APPLE", "105APPLE", "106APPLE", "107APPLE", "108APPLE", "Former CCC Inventory Photos", "Ipad resized", "Request_Photos", "Resized", "Robs Iphone (to Add to list)", "Tree Contractor Photos", "tree_inspections_scheduled_work", "Various tree monitoring photos"]);
+	   
 
 	  	    	    /* Control panel to display map layers */
-  var controlmarkers = L.control.layers( null, layers, {
+  var controlmarkers = L.control.layers( cities, layers, {
     position: "topleft",
     collapsed: false
   }).addTo(map);
