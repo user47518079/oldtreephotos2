@@ -102,7 +102,7 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
   controlLayers.addBaseLayer(osm, 'Open Street Map');
    
       
-      $.getJSON("./Wards.geojson",function(data){
+  $.getJSON("./Wards.geojson",function(data){
     // add GeoJSON layer to the map once the file is loaded
       L.geoJson(data,{
         weight: 2,
@@ -112,7 +112,7 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
         opacity: 2,
         fillOpacity: 0
       }).addTo(map);
-  });  
+  })controlLayers.addLayer(ward, 'Wards');
 
       
 
