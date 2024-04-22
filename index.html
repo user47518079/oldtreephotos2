@@ -125,48 +125,7 @@
       } 
 
         // Define color based on 'Family' column
-        var family = 'green'; // Default color
-        switch (row.Family) {
-          case 'Fulcrum Asset photos':
-            family = "#5f0266";
-            break;
-          case '100APPLE':
-          case '101APPLE':
-          case '102APPLE':
-          case '103APPLE':
-          case '104APPLE':
-          case '105APPLE':
-          case '106APPLE':
-          case '107APPLE':
-          case '108APPLE':
-            family = "#00ff00";
-            break;
-          case 'Former CCC Inventory Photos':
-            family = "#ffff33";
-            break;
-          case 'Ipad resized':
-            family = "#ffad33";
-            break;
-          case 'Request_Photos':
-            family = "#cc0099";
-            break;
-          case 'Robs Iphone (to Add to list)':
-            family = "#bfbfbf";
-            break;
-          case 'Tree Contractor Photos':
-            family = "#ecc6d9";
-            break;
-          case 'tree_inspections_scheduled_work':
-            family = "#ff471a";
-            break;
-          case 'Resized':
-            family = "#347aeb";
-            break;
-          case 'Various tree monitoring photos':
-            family = "#99ffff";
-            break;
-          default:
-            break;
+              var family =  (row.Family === 'Fulcrum Asset photos') ? "#5f0266" : (row.Family === '2015') ? "#3333ff" : (row.Family === '2016') ? "#3333ff" : (row.Family === '2017') ? "#3333ff" : (row.Family === '2018') ? "#3333ff" : (row.Family === '2019') ? "#3333ff" : (row.Family === '100APPLE') ? "#00ff00" : (row.Family === '101APPLE') ? "#00ff00" : (row.Family === '102APPLE') ? "#00ff00" : (row.Family === '103APPLE') ? "#00ff00" : (row.Family === '104APPLE') ? "#00ff00" : (row.Family === '105APPLE') ? "#00ff00" : (row.Family === '106APPLE') ? "#00ff00" : (row.Family === '107APPLE') ? "#00ff00" : (row.Family === '108APPLE') ? "#00ff00" : (row.Family === 'Former CCC Inventory Photos') ? "#ffff33" : (row.Family === 'Ipad resized') ? "#ffad33" : (row.Family === 'Request_Photos') ? "#cc0099" : (row.Family === 'Robs Iphone (to Add to list)') ? "#bfbfbf" : (row.Family === 'Tree Contractor Photos') ? "#ecc6d9" : (row.Family === 'tree_inspections_scheduled_work') ? "#ff471a" : (row.Family === 'Resized') ? "#347aeb" : (row.Family === 'Various tree monitoring photos') ? "#99ffff" : "green";
         }
 
         // Create and add marker
