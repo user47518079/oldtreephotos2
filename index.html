@@ -119,9 +119,54 @@
       for (var i in data) {
         var row = data[i];
 
-        // Populate uniqueAddresses array with unique values from 'Address' column
-        if (!uniqueAddresses.includes(row.Address)) {
-          uniqueAddresses.push(row.Address);
+      // Populate uniqueAddresses array with unique values from 'Address' column
+      if (!uniqueAddresses.includes(row.Address)) {
+    uniqueAddresses.push(row.Address);
+      } 
+
+        // Define color based on 'Family' column
+        var family = 'green'; // Default color
+        switch (row.Family) {
+          case 'Fulcrum Asset photos':
+            family = "#5f0266";
+            break;
+          case '100APPLE':
+          case '101APPLE':
+          case '102APPLE':
+          case '103APPLE':
+          case '104APPLE':
+          case '105APPLE':
+          case '106APPLE':
+          case '107APPLE':
+          case '108APPLE':
+            family = "#00ff00";
+            break;
+          case 'Former CCC Inventory Photos':
+            family = "#ffff33";
+            break;
+          case 'Ipad resized':
+            family = "#ffad33";
+            break;
+          case 'Request_Photos':
+            family = "#cc0099";
+            break;
+          case 'Robs Iphone (to Add to list)':
+            family = "#bfbfbf";
+            break;
+          case 'Tree Contractor Photos':
+            family = "#ecc6d9";
+            break;
+          case 'tree_inspections_scheduled_work':
+            family = "#ff471a";
+            break;
+          case 'Resized':
+            family = "#347aeb";
+            break;
+          case 'Various tree monitoring photos':
+            family = "#99ffff";
+            break;
+          default:
+            break;
         }
 
         // Create and add marker
@@ -147,16 +192,16 @@
         marker.addTo(map);
       }
 
-      // Populate dropdown with unique addresses
+   // Populate dropdown with unique addresses
       var addressFilter = document.getElementById("address-filter");
-      uniqueAddresses.forEach(function(Address) {
+      uniqueAddresses.forEach(function(address) {
         var option = document.createElement("option");
-        option.text = Address;
-        option.value = Address;
+        option.text = address;
+        option.value = address;
         addressFilter.add(option);
       });
 
-      // Event listener for address filter
+   // Event listener for address filter
       addressFilter.addEventListener("change", function() {
         var selectedAddress = this.value;
         map.eachLayer(function(layer) {
