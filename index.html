@@ -149,10 +149,10 @@
 
       // Populate dropdown with unique addresses
       var addressFilter = document.getElementById("address-filter");
-      uniqueAddresses.forEach(function(address) {
+      uniqueAddresses.forEach(function(Address) {
         var option = document.createElement("option");
-        option.text = address;
-        option.value = address;
+        option.text = Address;
+        option.value = Address;
         addressFilter.add(option);
       });
 
