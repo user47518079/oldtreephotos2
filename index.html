@@ -38,136 +38,37 @@
   <!-- Insert Javascript (.js) code to create the map -->
   <script>
 	  
+<script>
   // Define an empty array to hold unique addresses
   var uniqueAddresses = [];
 
-	  
-    var map = L.map('map', {
-      attributionControl: false,
-      zoomControl: true,
-      scrollWheelZoom: true,
-      tap: true
-    }).setView([-33.9359905,151.0219989], 13); // default center is overridden by Google Sheet options and points
-
-var myRenderer = L.canvas({ padding: 0.5 });
-    
-   
-    //var map = L.map('map', {
-    //center: [-33.9296, 151.0537], // EDIT latitude, longitude to re-center map
-    //zoom: 12,  // EDIT from 1 to 18 -- decrease to zoom out, increase to zoom in
-    //scrollWheelZoom: true,
-    //tap: true
-  //});
-
-  /* Control panel to display map layers */
-  var controlLayers = L.control.layers( null, null, {
-    position: "topright",
-    collapsed: false
-  }).addTo(map);
-
-	  
-    
-   // L.esri.tiledMapLayer("https://maps.six.nsw.gov.au/arcgis/rest/services/public/NSW_Base_Map/MapServer", {}).addTo(map);
-    
-  // display Statia dark basemap with labels and labels
-  var dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-	  maxZoom: 24,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-  }); // EDIT - insert or remove ".addTo(map)" before last semicolon to display by default
-  controlLayers.addBaseLayer(dark, 'Carto Dark');
-	
-	   // display CartoDB_Voyager
-	var CartoDB_VoyagerLabelsUnder = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png', {
-	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-	subdomains: 'abcd',
-	maxZoom: 24
-});
-  controlLayers.addBaseLayer(CartoDB_VoyagerLabelsUnder, 'CartoDB_Voyager');    	  
-	  
-  /* NSW Public Imagery */
-  var image = L.esri.tiledMapLayer({
-    url: 'https://maps.six.nsw.gov.au/arcgis/rest/services/public/NSW_Imagery/MapServer',
-    attribution: '&copy;  <a href="https://maps.six.nsw.gov.au/">Department of Customer Service 2020</a>'
-  });
-  controlLayers.addBaseLayer(image, 'NSW Imagery');  
-	
-	  //Esri Imagery
-var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-});
-	controlLayers.addBaseLayer(Esri_WorldImagery, 'Esri Imagery');
-    
-      /* NSW Basemap */
-  var base = L.esri.tiledMapLayer({
-    url: 'https://maps.six.nsw.gov.au/arcgis/rest/services/public/NSW_Base_Map/MapServer',
-    attribution: '&copy;  <a href="https://maps.six.nsw.gov.au/">Department of Customer Service 2020</a>'
-  });
-  controlLayers.addBaseLayer(base, 'NSW Base Map');    
-    
-    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 24,
-    attribution: '&copy;  <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map); // EDIT - insert or remove ".addTo(map)" before last semicolon to display by default
-  controlLayers.addBaseLayer(osm, 'Open Street Map');
-   
-      
-  $.getJSON("./Wards.geojson",function(data){
-    // add GeoJSON layer to the map once the file is loaded
-      L.geoJson(data,{
-        weight: 2,
-        color: '#FF00FF',
-        fill: false,
-        fillColor: '#0000FF',
-        opacity: 2,
-        fillOpacity: 0
-      }).addTo(map);
-  });
-
-      
-
-  // see more basemap options at https://leaflet-extras.github.io/leaflet-providers/preview/
-	  
-      
   // Read markers data from data.csv
   $.get('./data.csv', function(csvString){
 
     // Use PapaParse to convert string to array of objects
     var data = Papa.parse(csvString, {header: true,  dynamicTyping: true}).data;
 
-      // For each row in data, create a marker and add it to the map
+    // For each row in data, create a marker and add it to the map
     // For each row, columns `Latitude`, `Longitude`, and `Title` are required
     for (var i in data) {
       var row = data[i];
 
-	// Populate uniqueAddresses array with unique values from 'Address' column
+      // Populate uniqueAddresses array with unique values from 'Address' column
       if (!uniqueAddresses.includes(row.Address)) {
         uniqueAddresses.push(row.Address);
       }
-	    
-    
+
+      // Create and add marker
       var marker = L.circleMarker([row.Latitude, row.Longitude], {
-        renderer: myRenderer,
-        radius: 4.5,
-        weight: 0.25,
-        color: '#000000',
-        fillOpacity: 1,
-       	fillColor: family,
+        // Marker properties...
       }).bindPopup("<dl><dt><strong>Folder</strong></dt>"
            + "<dd>" + row.Address + "</dd>"
-           + "<dt><strong>Photo Name</strong></dt>"
-           + "<dd><i>" + row.Species + "</i></dd>"
-	   + "<dt><strong>Date Taken</strong></dt>"
-           + "<dd>" + row.Common + "</dd>"
-           + "<dt><strong>Link</strong></dt>"
-           + "<dd><a target='_blank' href=https://drive.google.com/file/d" + row.TreeID + "rel='noopener noreferrer'>Photo</a></dd>"
- + "<dd><a target='_blank' href=https://drive.google.com/file/d" + row.TreeID + " rel='noopener noreferrer'><img src=https://drive.google.com/thumbnail?id="+ row.Thumb + " alt=Photo style=width:100px></a></dd>"
-     	   + "<dt>___</dt>"
-           + "<dd><a href=https://docs.google.com/forms/d/e/1FAIpQLSfDaz0oKzZxBOqzncuskTicdpM_L_rEHB7HAydZ3RTz2fN1mg/viewform?usp=pp_url&entry.13348569" + row.Report + "target='_blank' rel='noopener noreferrer'>Report</a></dd>")
+           + "<!-- Rest of popup content -->"
       );
       marker.addTo(map);
     }
 
-	  // Populate dropdown with unique addresses
+    // Populate dropdown with unique addresses
     var addressFilter = document.getElementById("address-filter");
     uniqueAddresses.forEach(function(address) {
       var option = document.createElement("option");
@@ -175,7 +76,8 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
       option.value = address;
       addressFilter.add(option);
     });
-// Event listener for address filter
+
+    // Event listener for address filter
     addressFilter.addEventListener("change", function() {
       var selectedAddress = this.value;
       map.eachLayer(function(layer) {
@@ -189,23 +91,7 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
       });
     });
   });
-	    
-var cities = L.layerGroup(["2015", "2016", "2017", "2018", "2019", "100APPLE", "101APPLE", "102APPLE", "103APPLE", "104APPLE", "105APPLE", "106APPLE", "107APPLE", "108APPLE", "Former CCC Inventory Photos", "Ipad resized", "Request_Photos", "Resized", "Robs Iphone (to Add to list)", "Tree Contractor Photos", "tree_inspections_scheduled_work", "Various tree monitoring photos"]);
-	   
 
-	  	    	    /* Control panel to display map layers */
-  var controlmarkers = L.control.layers( cities, layers, {
-    position: "topleft",
-    collapsed: false
-  }).addTo(map);
-	  
-
-   
-
-
-  //map.attributionControl.setPrefix(
-    //'View <a href="https://github.com/HandsOnDataViz/leaflet-map-csv" target="_blank">code on GitHub</a>'
-  //);
 
   </script>
 </body>
