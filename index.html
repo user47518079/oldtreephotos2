@@ -26,13 +26,22 @@
 
 </head>
 <body>
-
+  <div id="filter-panel" class="leaflet-control leaflet-bar">
+    <h4>Filter by Address</h4>
+    <select id="address-filter">
+      <option value="">All Addresses</option>
+    </select>
+  </div>
   <!-- Insert HTML division tag to layout the map -->
   <div id="map"></div>
 
   <!-- Insert Javascript (.js) code to create the map -->
   <script>
+	  
+  // Define an empty array to hold unique addresses
+  var uniqueAddresses = [];
 
+	  
     var map = L.map('map', {
       attributionControl: false,
       zoomControl: true,
@@ -125,12 +134,15 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
     // Use PapaParse to convert string to array of objects
     var data = Papa.parse(csvString, {header: true,  dynamicTyping: true}).data;
 
-    // For each row in data, create a marker and add it to the map
+      // For each row in data, create a marker and add it to the map
     // For each row, columns `Latitude`, `Longitude`, and `Title` are required
     for (var i in data) {
       var row = data[i];
-      var family =  (row.Family === 'Fulcrum Asset photos') ? "#5f0266" : (row.Family === '2015') ? "#3333ff" : (row.Family === '2016') ? "#3333ff" : (row.Family === '2017') ? "#3333ff" : (row.Family === '2018') ? "#3333ff" : (row.Family === '2019') ? "#3333ff" : (row.Family === '100APPLE') ? "#00ff00" : (row.Family === '101APPLE') ? "#00ff00" : (row.Family === '102APPLE') ? "#00ff00" : (row.Family === '103APPLE') ? "#00ff00" : (row.Family === '104APPLE') ? "#00ff00" : (row.Family === '105APPLE') ? "#00ff00" : (row.Family === '106APPLE') ? "#00ff00" : (row.Family === '107APPLE') ? "#00ff00" : (row.Family === '108APPLE') ? "#00ff00" : (row.Family === 'Former CCC Inventory Photos') ? "#ffff33" : (row.Family === 'Ipad resized') ? "#ffad33" : (row.Family === 'Request_Photos') ? "#cc0099" : (row.Family === 'Robs Iphone (to Add to list)') ? "#bfbfbf" : (row.Family === 'Tree Contractor Photos') ? "#ecc6d9" : (row.Family === 'tree_inspections_scheduled_work') ? "#ff471a" : (row.Family === 'Resized') ? "#347aeb" : (row.Family === 'Various tree monitoring photos') ? "#99ffff" : "green";
-	    
+
+	// Populate uniqueAddresses array with unique values from 'Address' column
+      if (!uniqueAddresses.includes(row.Address)) {
+        uniqueAddresses.push(row.Address);
+      }
 	    
     
       var marker = L.circleMarker([row.Latitude, row.Longitude], {
@@ -157,6 +169,27 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
       marker.addTo(map);
     }
 
+	  // Populate dropdown with unique addresses
+    var addressFilter = document.getElementById("address-filter");
+    uniqueAddresses.forEach(function(address) {
+      var option = document.createElement("option");
+      option.text = address;
+      option.value = address;
+      addressFilter.add(option);
+    });
+// Event listener for address filter
+    addressFilter.addEventListener("change", function() {
+      var selectedAddress = this.value;
+      map.eachLayer(function(layer) {
+        if (layer instanceof L.CircleMarker) {
+          if (selectedAddress === "" || layer._popup._content.includes(selectedAddress)) {
+            layer.setStyle({ opacity: 1, fillOpacity: 1 });
+          } else {
+            layer.setStyle({ opacity: 0, fillOpacity: 0 });
+          }
+        }
+      });
+    });
   });
 	    
 var cities = L.layerGroup(["2015", "2016", "2017", "2018", "2019", "100APPLE", "101APPLE", "102APPLE", "103APPLE", "104APPLE", "105APPLE", "106APPLE", "107APPLE", "108APPLE", "Former CCC Inventory Photos", "Ipad resized", "Request_Photos", "Resized", "Robs Iphone (to Add to list)", "Tree Contractor Photos", "tree_inspections_scheduled_work", "Various tree monitoring photos"]);
