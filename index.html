@@ -22,11 +22,53 @@
   <style>
     body { margin:0; padding:0; }
     #map { position: absolute; top:0; bottom:0; right:0; left:0; }
+	#address-filter {
+    max-width: 130px; /* Set the maximum width */
+    width: auto; /* Allow the width to adjust based on content */
+}
+	#filter-panel {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+	max-width: 130px;
+	max-height: 70px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    z-index: 1000;
+}
+
+	#item-count {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+	max-height: 50px;
+	background-color: rgba(255, 255, 255, 0.7);
+    border: 0px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0);
+    z-index: 1000;
+}
+item-count
   </style>
 
 </head>
 <body>
-
+  
+  <div id="filter-panel" class="leaflet-control leaflet-bar">
+    <b>Filter by Camera</b>
+    <select id="address-filter">
+      <option value="">All Types</option>
+    </select>
+  </div>
+  
+  <div id="item-count" class="leaflet-control leaflet-bar">
+    <b id="filtered-count">Items: 0</b>
+</div>
+  
   <!-- Insert HTML division tag to layout the map -->
   <div id="map"></div>
 
@@ -38,7 +80,7 @@
       zoomControl: true,
       scrollWheelZoom: true,
       tap: true
-    }).setView([-33.9359905,151.0219989], 13); // default center is overridden by Google Sheet options and points
+    }).setView([-33.926044874790506, 151.04368863079975], 13); // default center is overridden by Google Sheet options and points
 
 var myRenderer = L.canvas({ padding: 0.5 });
     
@@ -51,11 +93,12 @@ var myRenderer = L.canvas({ padding: 0.5 });
   //});
 
   /* Control panel to display map layers */
-  var controlLayers = L.control.layers( null, null, {
+var controlLayers = L.control.layers(null, null, {
     position: "topright",
     collapsed: false
-  }).addTo(map);
+}).addTo(map);
 
+controlLayers.getContainer().style.backgroundColor = "rgba(255, 255, 255, 0.95)"; // 50% white
 	  
     
    // L.esri.tiledMapLayer("https://maps.six.nsw.gov.au/arcgis/rest/services/public/NSW_Base_Map/MapServer", {}).addTo(map);
@@ -102,7 +145,7 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
   controlLayers.addBaseLayer(osm, 'Open Street Map');
    
       
-  $.getJSON("./Wards.geojson",function(data){
+  $.getJSON("./Wards.geojson", function(data) {
     // add GeoJSON layer to the map once the file is loaded
       L.geoJson(data,{
         weight: 2,
@@ -117,29 +160,44 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
       
 
   // see more basemap options at https://leaflet-extras.github.io/leaflet-providers/preview/
-	  
-      
-  // Read markers data from data.csv
-  $.get('./data.csv', function(csvString){
+	  	    
+// Populate dropdown with unique addresses
+var addressFilter = document.getElementById("address-filter");
+var uniqueAddresses = []; // Define an empty array to hold unique addresses
 
+// Read markers data from data.csv
+$.get('./data.csv', function(csvString) {
     // Use PapaParse to convert string to array of objects
-    var data = Papa.parse(csvString, {header: true,  dynamicTyping: true}).data;
+    var data = Papa.parse(csvString, { header: true, dynamicTyping: true }).data;
 
     // For each row in data, create a marker and add it to the map
-    // For each row, columns `Latitude`, `Longitude`, and `Title` are required
-    for (var i in data) {
-      var row = data[i];
-      var family =  (row.Family === 'Fulcrum Asset photos') ? "#5f0266" : (row.Family === '2015') ? "#3333ff" : (row.Family === '2016') ? "#3333ff" : (row.Family === '2017') ? "#3333ff" : (row.Family === '2018') ? "#3333ff" : (row.Family === '2019') ? "#3333ff" : (row.Family === '100APPLE') ? "#00ff00" : (row.Family === '101APPLE') ? "#00ff00" : (row.Family === '102APPLE') ? "#00ff00" : (row.Family === '103APPLE') ? "#00ff00" : (row.Family === '104APPLE') ? "#00ff00" : (row.Family === '105APPLE') ? "#00ff00" : (row.Family === '106APPLE') ? "#00ff00" : (row.Family === '107APPLE') ? "#00ff00" : (row.Family === '108APPLE') ? "#00ff00" : (row.Family === 'Former CCC Inventory Photos') ? "#ffff33" : (row.Family === 'Ipad resized') ? "#ffad33" : (row.Family === 'Request_Photos') ? "#cc0099" : (row.Family === 'Robs Iphone (to Add to list)') ? "#bfbfbf" : (row.Family === 'Tree Contractor Photos') ? "#ecc6d9" : (row.Family === 'tree_inspections_scheduled_work') ? "#ff471a" : (row.Family === 'Resized') ? "#347aeb" : (row.Family === 'Various tree monitoring photos') ? "#99ffff" : "green";
-	    
-	    
-    
-      var marker = L.circleMarker([row.Latitude, row.Longitude], {
-        renderer: myRenderer,
-        radius: 4.5,
-        weight: 0.25,
-        color: '#000000',
-        fillOpacity: 1,
-       	fillColor: family,
+    for (var i = 0; i < data.length; i++) {
+        var row = data[i];
+		var family =  (row.Family === 'Fulcrum Asset photos') ? "#5f0266" : (row.Family === '2015') ? "#3333ff" : (row.Family === '2016') ? "#3333ff" : (row.Family === '2017') ? "#3333ff" : (row.Family === '2018') ? "#3333ff" : (row.Family === '2019') ? "#3333ff" : (row.Family === '100APPLE') ? "#00ff00" : (row.Family === '101APPLE') ? "#00ff00" : (row.Family === '102APPLE') ? "#00ff00" : (row.Family === '103APPLE') ? "#00ff00" : (row.Family === '104APPLE') ? "#00ff00" : (row.Family === '105APPLE') ? "#00ff00" : (row.Family === '106APPLE') ? "#00ff00" : (row.Family === '107APPLE') ? "#00ff00" : (row.Family === '108APPLE') ? "#00ff00" : (row.Family === 'Former CCC Inventory Photos') ? "#ffff33" : (row.Family === 'Ipad resized') ? "#ffad33" : (row.Family === 'Request_Photos') ? "#cc0099" : (row.Family === 'Robs Iphone (to Add to list)') ? "#bfbfbf" : (row.Family === 'Tree Contractor Photos') ? "#ecc6d9" : (row.Family === 'tree_inspections_scheduled_work') ? "#ff471a" : (row.Family === 'Resized') ? "#347aeb" : (row.Family === 'Various tree monitoring photos') ? "#99ffff" : "green";
+
+        // Filter out rows with address value '0' or empty
+        if (row.Address && row.Address.trim() !== "" && row.Address.trim() !== '0') {
+            if (!uniqueAddresses.includes(row.Address)) {
+                uniqueAddresses.push(row.Address);
+            }
+        } else {
+            // Add 'No Address' for rows with address value '0' or blank
+            row.Address = "No Address";
+            // Ensure the "No Address" option is added to the dropdown
+            if (!uniqueAddresses.includes(row.Address)) {
+                uniqueAddresses.push(row.Address);
+            }
+        }
+
+        // Create marker if LatLng coordinates are present
+        if (row.Latitude !== undefined && row.Longitude !== undefined) {
+            var marker = L.circleMarker([row.Latitude, row.Longitude], {
+                renderer: myRenderer,
+                radius: 4.5,
+                weight: 0.25,
+                color: '#000000',
+                fillOpacity: 1,
+                fillColor: family // Default color
       }).bindPopup("<dl><dt><strong>Folder</strong></dt>"
            + "<dd>" + row.Address + "</dd>"
            + "<dt><strong>Photo Name</strong></dt>"
@@ -150,25 +208,68 @@ var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest
            + "<dd><a target='_blank' href=https://drive.google.com/file/d" + row.TreeID + "rel='noopener noreferrer'>Photo</a></dd>"
  + "<dd><a target='_blank' href=https://drive.google.com/file/d" + row.TreeID + " rel='noopener noreferrer'><img src=https://drive.google.com/thumbnail?id="+ row.Thumb + " alt=Photo style=width:100px></a></dd>"
      	   + "<dt>___</dt>"
-           + "<dd><a href=https://docs.google.com/forms/d/e/1FAIpQLSfDaz0oKzZxBOqzncuskTicdpM_L_rEHB7HAydZ3RTz2fN1mg/viewform?usp=pp_url&entry.13348569" + row.Report + "target='_blank' rel='noopener noreferrer'>Report</a></dd>")
-      ;
-	   
-      
-      marker.addTo(map);
+           + "<dd><a href=https://docs.google.com/forms/d/e/1FAIpQLSfDaz0oKzZxBOqzncuskTicdpM_L_rEHB7HAydZ3RTz2fN1mg/viewform?usp=pp_url&entry.13348569" + row.Report + "target='_blank' rel='noopener noreferrer'>Report</a></dd>");
+
+            marker.addTo(map);
+        }
     }
 
-  });
-	    
-var cities = L.layerGroup(["2015", "2016", "2017", "2018", "2019", "100APPLE", "101APPLE", "102APPLE", "103APPLE", "104APPLE", "105APPLE", "106APPLE", "107APPLE", "108APPLE", "Former CCC Inventory Photos", "Ipad resized", "Request_Photos", "Resized", "Robs Iphone (to Add to list)", "Tree Contractor Photos", "tree_inspections_scheduled_work", "Various tree monitoring photos"]);
-	   
+    // Populate dropdown with unique addresses
+    var addressFilter = document.getElementById("address-filter");
+    addressFilter.innerHTML = ""; // Clear existing options
 
-	  	    	    /* Control panel to display map layers */
-  var controlmarkers = L.control.layers( cities, layers, {
-    position: "topleft",
-    collapsed: false
-  }).addTo(map);
-	  
+    // Add "All Addresses" option
+    var allAddressesOption = document.createElement("option");
+    allAddressesOption.text = "All Types";
+    allAddressesOption.value = "";
+    addressFilter.add(allAddressesOption);
 
+    uniqueAddresses.forEach(function(Address) {
+        var option = document.createElement("option");
+        option.text = Address;
+        option.value = Address;
+        addressFilter.add(option);
+    });
+
+    // Add "No Address" option
+    //var noAddressOption = document.createElement("option");
+    //noAddressOption.text = "No Address";
+    //noAddressOption.value = "No Address";
+    //addressFilter.add(noAddressOption);
+
+
+    console.log("Unique Addresses:", uniqueAddresses); // Log unique addresses array for debugging
+    console.log("Dropdown Options:", addressFilter.innerHTML); // Log dropdown options for debugging
+});
+
+function updateFilteredCount() {
+    var count = 0;
+    map.eachLayer(function(layer) {
+        if (layer instanceof L.CircleMarker && layer.options.opacity === 1) {
+            count++;
+        }
+    });
+    document.getElementById("filtered-count").textContent = "Items: " + count;
+}
+
+// Call the function initially to set the count
+updateFilteredCount();
+
+// Event listener for address filter
+addressFilter.addEventListener("change", function() {
+    var selectedAddress = this.value;
+    map.eachLayer(function(layer) {
+        if (layer instanceof L.CircleMarker) {
+            if (selectedAddress === "" || layer._popup._content.includes(selectedAddress)) {
+                layer.setStyle({ opacity: 1, fillOpacity: 1 });
+            } else {
+                layer.setStyle({ opacity: 0, fillOpacity: 0 });
+            }
+        }
+    });
+	    // Update the count after filtering
+    updateFilteredCount();
+});
    
 
 
